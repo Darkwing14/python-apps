@@ -4,11 +4,11 @@ clock = []
 
 try:
     while True:
-        mp.waitms(1000)  # wait 1 second every update to reduce flashing in TTY environments.
         mp.clear()
         clock = [mp.timeunit("i"), mp.timeunit("m"), mp.timeunit("s"), mp.timeunit("p")]
         print("Press Ctrl+C to exit the Clock app.")
         print(f"{clock[0]}:{clock[1]:02}:{clock[2]:02} {clock[3]}")
+        mp.waitms(1000)  # wait 1 second every update to reduce flashing in TTY environments.
 except KeyboardInterrupt:
     mp.clear()
 
