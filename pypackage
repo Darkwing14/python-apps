@@ -1,0 +1,32 @@
+#!/usr/bin/python3
+import subprocess
+import magicpython as mp
+import platform
+mp.clear()
+if platform.system() != "Linux":
+    raise OSError("This app is Linux-only. Sorry!")
+def sanitize(input_string: str) -> str:
+    """
+    Remove characters and operators that could be used for shell injection.
+    """
+    forbidden = [";", "&", "|", "`", "$(", ")", "<", ">", "!", '"', "'", "\\"]  # add more if needed
+    for char in forbidden:
+        input_string = input_string.replace(char, "")
+    return input_string
+update = input("What would you like to do? Blank - Exit. 's' - Update system. 'p' - Update packages. 'i' - Install with apt (all users). 'li' - Install with flatpak (no sudo) 'gi' - Install with flatpak (all users): >")
+mp.clear()
+match update:
+    case "s":
+        subprocess.run("sudo apt update && sudo apt upgrade -y", shell=True)
+    case "p":
+        subprocess.run("sudo apt update && sudo flatpak update -y --system", shell=True)
+    case "i":
+        package = input("Install what? >")
+        subprocess.run(f"sudo apt install {sanitize(package)}", shell=True)
+    case "li":
+        package = input("Install what? >")
+        subprocess.run(f"flatpak install flathub {sanitize(package)}", shell=True)
+    case "gi":
+        package = input("Install what? >")
+        subprocess.run(f"sudo flatpak install --system flathub {sanitize(package)}", shell=True)
+
